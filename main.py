@@ -26,7 +26,10 @@ class Game: #capitalize classes; easier to identify
         #load game data
     def load_data(self):
         game_folder = path.dirname(__file__)
+        img_folder = path.join(game_folder, 'images')
+        self.coin_img = pg.image.load(path.join(img_folder, 'coin.png')).convert_alpha()
         self.map_data = []
+    
         '''
         The with statement is a context manager in Python. 
         It is used to ensure that a resource is properly closed or released 
@@ -39,6 +42,7 @@ class Game: #capitalize classes; easier to identify
     def new(self):
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+        self.coins = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #self.all_sprites.add(self.player)
         # for x in range(10, 20):
@@ -52,10 +56,12 @@ class Game: #capitalize classes; easier to identify
                     Wall(self, col, row)
                 if tile == 'p':
                     self.player = Player(self, col, row)
+                if tile == 'C':
+                    Coin(self, col, row)
                 if tile == 'e':
                     print("an enemy at", row, col)
                     Enemy(self, col, row)
-    
+
     #run method, responsible for running the game engines
     def run(self):
         self.playing = True
@@ -82,6 +88,14 @@ class Game: #capitalize classes; easier to identify
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+
+    def draw_text(self, surface, text, size, color, x, y):
+        font_name = pg.font.match_font('arial')
+        font = pg.font.Font(font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.topleft = (x*TILESIZE, y*TILESIZE)
+        surface.blit(text_surface)
 
     def draw(self):
         self.screen.fill(BGCOLOR)
