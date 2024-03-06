@@ -1,5 +1,7 @@
 # This file was created by: Reyn Yamamoto
 
+#healthbar, damage from enemy interaction, enemy movement
+
 # 
 import pygame as pg
 from settings import *
@@ -7,6 +9,31 @@ from sprites import *
 import sys
 from random import randint
 from os import path
+
+#math function to round down the clock
+from math import floor
+
+#'cooldown' class used to control time
+class Cooldown():
+    #sets all properties to zero when instantiated
+    def __init__(self):
+        self.current_time = 0
+        self.event_time = 0
+        self.delta = 0
+        #ticking ensures timer is counting
+    def ticking(self):
+        self.current_time = floor((pg.time.get_ticks())/1000)
+        self.delta = self.current_time - self.event_time
+    def countdown(self, x):
+        x = x - self.delta
+        if x != None:
+            return x
+    def event_reset(self):
+        self.event_time = floor ((pg.time.get_ticks())/1000)
+        #sets current time
+    def timer(self):
+        self.current_time = floor ((pg.time.get_ticks())/1000)
+
 
 # create a game class 
 class Game: #capitalize classes; easier to identify
@@ -30,16 +57,13 @@ class Game: #capitalize classes; easier to identify
         self.coin_img = pg.image.load(path.join(img_folder, 'coin.png')).convert_alpha()
         self.map_data = []
     
-        '''
-        The with statement is a context manager in Python. 
-        It is used to ensure that a resource is properly closed or released 
-        after it is used. This can help to prevent errors and leaks.
-        '''
         with open(path.join(game_folder, 'map.txt'), 'rt') as f:
             for line in f:
                 print(line)
                 self.map_data.append(line)
     def new(self):
+        self.test_timer = Cooldown()
+        print("create new game...")
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.coins = pg.sprite.Group()
@@ -77,10 +101,9 @@ class Game: #capitalize classes; easier to identify
     def quit(self):
         pg.quit()
         sys.exit()
-    # method, tied to a class or object
-    def input(self): 
-        pass
+
     def update(self):
+        self.test_timer.ticking()
         self.all_sprites.update()
     
     def draw_grid(self):
@@ -95,13 +118,14 @@ class Game: #capitalize classes; easier to identify
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.topleft = (x*TILESIZE, y*TILESIZE)
-        surface.blit(text_surface)
+        surface.blit(text_surface, text_rect)
 
     def draw(self):
-        self.screen.fill(BGCOLOR)
-        self.draw_grid()
-        self.all_sprites.draw(self.screen)
-        pg.display.flip()
+            self.screen.fill(BGCOLOR)
+            self.draw_grid()
+            self.all_sprites.draw(self.screen)
+            self.draw_text(self.screen, str(self.test_timer.countdown(45)), 24, WHITE, WIDTH/2 - 32, 2)
+            pg.display.flip()
 
     def events(self):
             # listening for events
