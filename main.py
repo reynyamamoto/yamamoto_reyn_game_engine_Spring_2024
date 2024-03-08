@@ -56,6 +56,8 @@ class Game: #capitalize classes; easier to identify
         img_folder = path.join(game_folder, 'images')
         self.coin_img = pg.image.load(path.join(img_folder, 'coin.png')).convert_alpha()
         self.map_data = []
+        self.player_img = pg.image.load(path.join(img_folder, 'player1.png')).convert_alpha()
+        self.enemy_img = pg.image.load(path.join(img_folder, 'enemy.png')).convert_alpha()
     
         with open(path.join(game_folder, 'map.txt'), 'rt') as f:
             for line in f:
@@ -103,7 +105,6 @@ class Game: #capitalize classes; easier to identify
         sys.exit()
 
     def update(self):
-        self.test_timer.ticking()
         self.all_sprites.update()
     
     def draw_grid(self):
