@@ -19,7 +19,7 @@ class Cooldown():
     def __init__(self):
         self.current_time = 0
         self.event_time = 0
-        self.delta = 0
+        self.delta = 0 
         #ticking ensures timer is counting
     def ticking(self):
         self.current_time = floor((pg.time.get_ticks())/1000)
@@ -121,8 +121,9 @@ class Game: #capitalize classes; easier to identify
         surface.blit(text_surface, text_rect)
 
     def draw(self):
+            pass
             self.screen.fill(BGCOLOR)
-            self.draw_grid()
+            #self.draw_grid()
             self.all_sprites.draw(self.screen)
             self.draw_text(self.screen, str(self.test_timer.countdown(45)), 24, WHITE, WIDTH/2 - 32, 2)
             pg.display.flip()

@@ -58,11 +58,8 @@ class Player(pg.sprite.Sprite):
         if hits:
             if str(hits[0].__class__.__name__) == "Coin":
                 self.moneybag += 1
-            if str(hits[0].__class__.__name__) == "PowerUp":
-                self.speed += 200
 
             
-    
     def update(self):
         # self.rect.x = self.x
         # self.rect.y = self.y
