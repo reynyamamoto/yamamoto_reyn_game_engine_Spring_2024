@@ -134,6 +134,7 @@ class Enemy(pg.sprite.Sprite):
         self.rect.y = y * TILESIZE
         self.speed = 0
 
+
     def collide_with_enemies(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.walls, False )
