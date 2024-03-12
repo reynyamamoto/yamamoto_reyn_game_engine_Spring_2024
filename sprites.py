@@ -20,7 +20,7 @@ class Player(pg.sprite.Sprite):
         self.x = x * TILESIZE
         self.y = y * TILESIZE
         self.speed = 300
-        self.moneybag = 0
+        self.score = 0
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -58,7 +58,7 @@ class Player(pg.sprite.Sprite):
         hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
             if str(hits[0].__class__.__name__) == "Coin":
-                self.moneybag += 1
+                self.score += 1
 
             
     def update(self):

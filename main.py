@@ -51,6 +51,8 @@ class Game: #capitalize classes; easier to identify
         # later on we'll story game info with this
         self.load_data()
         #load game data
+        self.score = 0
+
     def load_data(self):
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'images')
@@ -106,6 +108,7 @@ class Game: #capitalize classes; easier to identify
 
     def update(self):
         self.all_sprites.update()
+
     
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -118,7 +121,7 @@ class Game: #capitalize classes; easier to identify
         font = pg.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
-        text_rect.topleft = (x*TILESIZE, y*TILESIZE)
+        text_rect.midtop = (x, y)
         surface.blit(text_surface, text_rect)
 
     def draw(self):
@@ -126,7 +129,7 @@ class Game: #capitalize classes; easier to identify
             self.screen.fill(BGCOLOR)
             #self.draw_grid()
             self.all_sprites.draw(self.screen)
-            self.draw_text(self.screen, str(self.test_timer.countdown(45)), 24, WHITE, WIDTH/2 - 32, 2)
+            self.draw_text(self.screen, str(self.score), 24, WHITE, WIDTH/2 - 32, 2)
             pg.display.flip()
 
     def events(self):
