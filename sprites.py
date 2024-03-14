@@ -5,6 +5,9 @@
 
 import pygame as pg
 from settings import *
+import sys
+
+vec = pg.math.Vector2
 
 # write a player class
 class Player(pg.sprite.Sprite):
@@ -59,6 +62,12 @@ class Player(pg.sprite.Sprite):
         if hits:
             if str(hits[0].__class__.__name__) == "Coin":
                 self.score += 1
+        hits = pg.sprite.spritecollide(self, group, kill)
+        if hits:
+            if str(hits[0].__class__.__name__) == 'Enemy':
+                print("you died")
+                pg.quit()
+                sys.exit()
 
             
     def update(self):
@@ -72,6 +81,7 @@ class Player(pg.sprite.Sprite):
         self.rect.y = self.y
         self.collide_with_walls('y')
         self.collide_with_group(self.game.coins, True)
+        self.collide_with_group(self.game.enemy, True)
         #coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         #if coin_hits:
             #print("I got a coin")
@@ -128,11 +138,19 @@ class Enemy(pg.sprite.Sprite):
         #self.image.fill(RED)
         self.image = game.enemy_img
         self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-        self.speed = 0
+        self.pos = vec(x, y) * TILESIZE
+        self.vel = vec(0, 0)
+        self.acc = vec(0, 0)
+        self.rect.center = self.pos
+        self.rot = 0
+        self.speed = 1500
+    def update(self):
+        self.rot = (self.game.player.rect.center - self.pos).angle_to(vec(1, 0))
+        self.rect.center = self.pos
+        self.acc = vec(self.speed, 0).rotate(-self.rot)
+        self.acc += self.vel * -5
+        self.vel += self.acc * self.game.dt
+        self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
 
 
     def collide_with_enemies(self, dir):

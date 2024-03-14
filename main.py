@@ -13,7 +13,7 @@ from os import path
 #math function to round down the clock
 from math import floor
 
-#'cooldown' class used to control time
+#'cooldown' class used to control times
 class Cooldown():
     #sets all properties to zero when instantiated
     def __init__(self):
@@ -71,6 +71,7 @@ class Game: #capitalize classes; easier to identify
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.coins = pg.sprite.Group()
+        self.enemy = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #self.all_sprites.add(self.player)
         # for x in range(10, 20):
