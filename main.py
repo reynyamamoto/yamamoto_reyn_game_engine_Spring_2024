@@ -1,6 +1,6 @@
 # This file was created by: Reyn Yamamoto
 
-#healthbar, damage from enemy interaction, enemy movement
+#images, damage from enemy interaction, enemy movement
 
 # 
 import pygame as pg
@@ -48,11 +48,11 @@ class Game: #capitalize classes; easier to identify
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.running = True
-        # later on we'll story game info with this
-        self.load_data()
         #load game data
+        self.load_data()
         self.score = 0
 
+#importing image files
     def load_data(self):
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'images')
@@ -66,16 +66,11 @@ class Game: #capitalize classes; easier to identify
                 print(line)
                 self.map_data.append(line)
     def new(self):
-        self.test_timer = Cooldown()
-        print("create new game...")
         self.all_sprites = pg.sprite.Group()
+        self.player = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.coins = pg.sprite.Group()
         self.enemy = pg.sprite.Group()
-        #self.player = Player(self, 10, 10)
-        #self.all_sprites.add(self.player)
-        # for x in range(10, 20):
-        #     Wall(self, x, 5)
         for row, tiles in enumerate(self.map_data):
             print(row)
             for col, tile in enumerate(tiles):
@@ -130,7 +125,7 @@ class Game: #capitalize classes; easier to identify
             self.screen.fill(BGCOLOR)
             #self.draw_grid()
             self.all_sprites.draw(self.screen)
-            self.draw_text(self.screen, str(self.score), 24, WHITE, WIDTH/2 - 32, 2)
+            self.draw_text(self.screen, str(self.player.score), 24, WHITE, WIDTH/2 - 32, 2)
             pg.display.flip()
 
     def events(self):
