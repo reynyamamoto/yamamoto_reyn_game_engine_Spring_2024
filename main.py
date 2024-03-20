@@ -1,6 +1,8 @@
 # This file was created by: Reyn Yamamoto
 
-#spikes, damage from enemy interaction, enemy movement
+#new stationary enemy class, damage from enemy interaction, enemy movement
+
+# goal of game to collect all coins before enemy can catch up to you while avoiding stationary spikes
 
 # 
 import pygame as pg
