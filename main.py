@@ -1,6 +1,6 @@
 # This file was created by: Reyn Yamamoto
 
-#images, damage from enemy interaction, enemy movement
+#spikes, damage from enemy interaction, enemy movement
 
 # 
 import pygame as pg
@@ -9,29 +9,6 @@ from sprites import *
 import sys
 from random import randint
 from os import path
-
-
-#'cooldown' class used to control times
-class Cooldown():
-    #sets all properties to zero when instantiated
-    def __init__(self):
-        self.current_time = 0
-        self.event_time = 0
-        self.delta = 0 
-        #ticking ensures timer is counting
-    def ticking(self):
-        self.current_time = floor((pg.time.get_ticks())/1000)
-        self.delta = self.current_time - self.event_time
-    def countdown(self, x):
-        x = x - self.delta
-        if x != None:
-            return x
-    def event_reset(self):
-        self.event_time = floor ((pg.time.get_ticks())/1000)
-        #sets current time
-    def timer(self):
-        self.current_time = floor ((pg.time.get_ticks())/1000)
-
 
 # create a game class 
 class Game: #capitalize classes; easier to identify

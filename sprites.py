@@ -109,7 +109,6 @@ class Coin(pg.sprite.Sprite):
         self.game = game
         #self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image = game.coin_img
-        self.rect = self.image.get_rect()
         # self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.x = x
@@ -124,7 +123,6 @@ class Enemy(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image = game.enemy_img
         self.rect = self.image.get_rect()
         self.pos = vec(x, y) * TILESIZE
