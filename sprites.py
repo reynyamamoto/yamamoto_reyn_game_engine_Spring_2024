@@ -76,17 +76,17 @@ class Player(pg.sprite.Sprite):
 
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
-        if hits:
-            #when player collides with enemy, game exits
-            if str(hits[0].__class__.__name__) == 'Enemy':
-                print("you died")
-                pg.quit()
-                sys.exit()
-        hits = pg.sprite.spritecollide(self, group, kill)
-        if hits:
-            #when player class collides with coins, score increments
-            if str(hits[0].__class__.__name__) == "Coin":
-                self.score += 1
+        for sprite in hits:
+                #when player collides with enemy, game exits
+                if str(hits[0].__class__.__name__) == 'Enemy':
+                    pg.quit()
+                    sys.exit()
+                #when player class collides with coins, score increments
+                elif str(hits[0].__class__.__name__) == "Coin":
+                    self.score += 1
+                elif str(hits[0].__class__.__name__) == 'Spike':
+                    pg.quit()
+                    sys.exit()
     
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -142,6 +142,19 @@ class Enemy(pg.sprite.Sprite):
         #enemy acceleration
         self.vel += self.acc * self.game.dt
         self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
+
+class Spike(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.spike_img
+        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
 
 
     def collide_with_enemies(self, dir):

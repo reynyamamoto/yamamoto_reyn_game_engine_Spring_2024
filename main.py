@@ -10,8 +10,6 @@ import sys
 from random import randint
 from os import path
 
-#math function to round down the clock
-from math import floor
 
 #'cooldown' class used to control times
 class Cooldown():
@@ -60,6 +58,7 @@ class Game: #capitalize classes; easier to identify
         self.map_data = []
         self.player_img = pg.image.load(path.join(img_folder, 'player1.png')).convert_alpha()
         self.enemy_img = pg.image.load(path.join(img_folder, 'enemy.png')).convert_alpha()
+        self.spike_img = pg.image.load(path.join(img_folder, 'spike.png')).convert_alpha()
     
         with open(path.join(game_folder, 'map.txt'), 'rt') as f:
             for line in f:
@@ -71,6 +70,7 @@ class Game: #capitalize classes; easier to identify
         self.walls = pg.sprite.Group()
         self.coins = pg.sprite.Group()
         self.enemy = pg.sprite.Group()
+        self.spike = pg.sprite.Group()
         for row, tiles in enumerate(self.map_data):
             print(row)
             for col, tile in enumerate(tiles):
@@ -83,8 +83,9 @@ class Game: #capitalize classes; easier to identify
                 if tile == 'C':
                     Coin(self, col, row)
                 if tile == 'e':
-                    print("an enemy at", row, col)
                     Enemy(self, col, row)
+                if tile == 's':
+                    Spike(self, col, row)
 
     #run method, responsible for running the game engines
     def run(self):
@@ -121,11 +122,10 @@ class Game: #capitalize classes; easier to identify
         surface.blit(text_surface, text_rect)
 
     def draw(self):
-            pass
             self.screen.fill(BGCOLOR)
             #self.draw_grid()
             self.all_sprites.draw(self.screen)
-            self.draw_text(self.screen, str(self.player.score), 24, WHITE, WIDTH/2 - 32, 2)
+            self.draw_text(self.screen, str(self.player.score), 24, WHITE, WIDTH/2 - 32, 1)
             pg.display.flip()
 
     def events(self):
