@@ -48,6 +48,7 @@ class Player(pg.sprite.Sprite):
         self.collide_with_walls('y')
         self.collide_with_group(self.game.coins, True)
         self.collide_with_group(self.game.enemy, True)
+        self.collide_with_group(self.game.spike, True)
         #coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         #if coin_hits:
             #print("I got a coin")
