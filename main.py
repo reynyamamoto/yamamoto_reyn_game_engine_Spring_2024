@@ -2,7 +2,13 @@
 
 #new stationary enemy class, damage from enemy interaction, enemy movement
 
-# goal of game to collect all coins before enemy can catch up to you while avoiding stationary spikes
+# goal of game to collect all coins before enemy can catch up to you while avoiding stationary dddddddddddddspikes
+
+
+'''
+BETA Goal:
+Ability to kill the enemy or get rid of the spikes
+'''
 
 # 
 import pygame as pg
