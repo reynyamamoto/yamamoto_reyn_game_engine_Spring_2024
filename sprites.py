@@ -51,6 +51,10 @@ class Player(pg.sprite.Sprite):
         self.y = y * TILESIZE
         self.speed = 300
         self.score = 0
+        self.collide_with_walls_flag = True  # Flag for collision behavior
+        self.is_dashing = False  # Flag for dash state
+        self.dash_duration = 0.5  # Dash duration in seconds
+        self.dash_timer = 0  # Timer for dash duration
 
 
     def get_keys(self):
@@ -84,26 +88,55 @@ class Player(pg.sprite.Sprite):
             #print("I got a coin")
         #self.rect.x = self.x * TILESIZE
         #self.rect.y = self.y * TILESIZE
+        self.check_collisions()
+        self.handle_dash()
+
+    def start_dash(self):
+        self.is_dashing = True
+        self.dash_timer = self.dash_duration
+
+    def handle_dash(self):
+        if self.is_dashing:
+            # Move player during dash
+            self.dash_timer -= self.game.dt
+            if self.dash_timer <= 0:
+                self.is_dashing = False  # End dash when duration is over
+        else:
+            self.rect.x += self.vx * self.game.dt
+            self.collide_with_walls('x')
+            self.rect.y += self.vy * self.game.dt
+            self.collide_with_walls('y')
+
+    def check_collisions(self, direction=None):
+        if not self.is_dashing:
+            # Regular collision detection when not dashing
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits and self.collide_with_walls:
+                # Handle collision with walls
+                if direction == 'x':
+                    self.rect.x -= self.vel.x * self.game.dt
+                if direction == 'y':
+                    self.rect.y -= self.vel.y * self.game.dt
 
     def collide_with_walls(self, dir):
-        if dir == 'x':
-            hits = pg.sprite.spritecollide(self, self.game.walls, False )
-            if hits:
-                if self.vx > 0:
-                    self.x = hits[0].rect.left - self.rect.width
-                if self.vx < 0: 
-                    self.x = hits[0].rect.right
-                self.vx = 0
-                self.rect.x = self.x
-        if dir == 'y':
-            hits = pg.sprite.spritecollide(self, self.game.walls, False )
-            if hits:
-                if self.vy > 0:
-                    self.y = hits[0].rect.top - self.rect.height
-                if self.vy < 0:
-                    self.y = hits[0].rect.bottom
-                self.vy = 0
-                self.rect.y = self.y
+        if not self.is_dashing:
+            # Regular collision detection when not dashing
+            if dir == 'x':
+                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                for wall in hits:
+                    if self.vx > 0:
+                        self.rect.right = wall.rect.left
+                    elif self.vx < 0:
+                        self.rect.left = wall.rect.right
+                    self.vx = 0
+            if dir == 'y':
+                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                for wall in hits:
+                    if self.vy > 0:
+                        self.rect.bottom = wall.rect.top
+                    elif self.vy < 0:
+                        self.rect.top = wall.rect.bottom
+                    self.vy = 0
 
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)

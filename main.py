@@ -114,6 +114,12 @@ class Game: #capitalize classes; easier to identify
             pg.display.flip()
 
     def events(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.quit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    self.player.start_dash()
             # listening for events
             for event in pg.event.get():
                 # when you hit the red x the window closes the game ends
@@ -133,6 +139,8 @@ class Game: #capitalize classes; easier to identify
                 # if event.type == pg.KEYDOWN:
                 #     if event.key == pg.K_DOWN:
                 #         self.player.move(dy=1)
+
+
     def show_start_screen(self):
         pass
     def show_go_screen(self):
