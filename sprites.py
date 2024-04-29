@@ -42,7 +42,8 @@ class Player(pg.sprite.Sprite):
         self.last_update = 0
         self.material = True
         self.jumping = False
-        self.walking = False    
+        self.walking = False 
+        self.current_frame = 0   
         #self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.vx, self.vy = 0, 0
