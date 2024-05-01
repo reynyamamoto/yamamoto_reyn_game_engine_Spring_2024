@@ -56,7 +56,7 @@ class Game: #capitalize classes; easier to identify
         self.coins = pg.sprite.Group()
         self.enemy = pg.sprite.Group()
         self.spike = pg.sprite.Group()
-        self.perimeters = pg.sprite.Group
+        self.perimeters = pg.sprite.Group()
         for row, tiles in enumerate(self.map_data):
             print(row)
             for col, tile in enumerate(tiles):
