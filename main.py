@@ -7,7 +7,7 @@
 
 '''
 BETA Goal:
-Ability to kill the enemy or get rid of the spikes
+Dashing ability through walls
 '''
 
 # 
@@ -143,6 +143,7 @@ class Game: #capitalize classes; easier to identify
     def show_go_screen(self):
         pass
 ####################### Instantiate game... ###################
+
 g = Game()
 # g.show_go_screen()
 while True:

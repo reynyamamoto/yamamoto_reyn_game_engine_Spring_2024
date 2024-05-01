@@ -91,10 +91,10 @@ class Player(pg.sprite.Sprite):
         self.handle_dash()
         self.handle_movement()
 
+#assisted by chatgpt
     def start_dash(self):
         self.is_dashing = True
         self.dash_timer = self.dash_duration
-
     def handle_movement(self):
         if not self.is_dashing:
             self.rect.x += self.vx * self.game.dt
@@ -103,14 +103,13 @@ class Player(pg.sprite.Sprite):
             self.collide_with_walls('y')
         else:
             self.handle_dash()
-
     def handle_dash(self):
         self.dash_timer -= self.game.dt
         if self.dash_timer <= 0:
             self.is_dashing = False
 
     def check_collisions(self):
-        self.collide_with_group(self.game.perimeters)
+        self.collide_with_group(self.game.perimeters, True)
         self.collide_with_group(self.game.coins, True)
         self.collide_with_group(self.game.enemy, True)
         self.collide_with_group(self.game.spike, True)
