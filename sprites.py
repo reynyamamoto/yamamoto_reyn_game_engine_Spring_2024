@@ -40,21 +40,17 @@ class Player(pg.sprite.Sprite):
         self.load_images()
         self.image = self.standing_frames[0]   
         self.last_update = 0
-        self.material = True
-        self.jumping = False
-        self.walking = False 
         self.current_frame = 0   
-        #self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
         self.y = y * TILESIZE
         self.speed = 300
         self.score = 0
-        self.collide_with_walls_flag = True  # Flag for collision behavior
         self.is_dashing = False  # Flag for dash state
         self.dash_duration = 0.5  # Dash duration in seconds
         self.dash_timer = 0  # Timer for dash duration
+        game.all_sprites.add(self)
 
 
     def get_keys(self):
@@ -68,6 +64,8 @@ class Player(pg.sprite.Sprite):
             self.vy = -self.speed
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vy = self.speed
+        if keys[pg.K_DOWN] or keys[pg.K_SPACE]:
+            self.start_dash()
     
     def update(self):
         # self.rect.x = self.x
@@ -83,6 +81,7 @@ class Player(pg.sprite.Sprite):
         self.collide_with_group(self.game.coins, True)
         self.collide_with_group(self.game.enemy, True)
         self.collide_with_group(self.game.spike, True)
+        self.collide_with_group(self.game.perimeters, True)
         #coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         #if coin_hits:
             #print("I got a coin")
@@ -90,33 +89,31 @@ class Player(pg.sprite.Sprite):
         #self.rect.y = self.y * TILESIZE
         self.check_collisions()
         self.handle_dash()
+        self.handle_movement()
 
     def start_dash(self):
         self.is_dashing = True
         self.dash_timer = self.dash_duration
 
-    def handle_dash(self):
-        if self.is_dashing:
-            # Move player during dash
-            self.dash_timer -= self.game.dt
-            if self.dash_timer <= 0:
-                self.is_dashing = False  # End dash when duration is over
-        else:
+    def handle_movement(self):
+        if not self.is_dashing:
             self.rect.x += self.vx * self.game.dt
             self.collide_with_walls('x')
             self.rect.y += self.vy * self.game.dt
             self.collide_with_walls('y')
+        else:
+            self.handle_dash()
 
-    def check_collisions(self, direction=None):
-        if not self.is_dashing:
-            # Regular collision detection when not dashing
-            hits = pg.sprite.spritecollide(self, self.game.walls, False)
-            if hits and self.collide_with_walls:
-                # Handle collision with walls
-                if direction == 'x':
-                    self.rect.x -= self.vel.x * self.game.dt
-                if direction == 'y':
-                    self.rect.y -= self.vel.y * self.game.dt
+    def handle_dash(self):
+        self.dash_timer -= self.game.dt
+        if self.dash_timer <= 0:
+            self.is_dashing = False
+
+    def check_collisions(self):
+        self.collide_with_group(self.game.perimeters)
+        self.collide_with_group(self.game.coins, True)
+        self.collide_with_group(self.game.enemy, True)
+        self.collide_with_group(self.game.spike, True)
 
     def collide_with_walls(self, dir):
         if not self.is_dashing:
@@ -136,22 +133,21 @@ class Player(pg.sprite.Sprite):
                         self.rect.bottom = wall.rect.top
                     elif self.vy < 0:
                         self.rect.top = wall.rect.bottom
-                    self.vy = 0
-
-    def collide_with_group(self, group, kill):
+                    self.vy = 0   
+    
+    def collide_with_group(self, group, kill=False):
         hits = pg.sprite.spritecollide(self, group, kill)
         for sprite in hits:
-                #when player collides with enemy, game exits/player dies
-                if str(hits[0].__class__.__name__) == "Enemy":
-                    pg.quit()
-                    sys.exit()
-                #when player collides with coins, score increments
-                elif str(hits[0].__class__.__name__) == "Coin":
-                    self.score += 1
-                #when player collides with spikes, game exits/player dies
-                elif str(hits[0].__class__.__name__) == "Spike":
-                    pg.quit()
-                    sys.exit()
+            if isinstance(sprite, Perimeter):
+                self.rect.move_ip(sprite.rect.move(self.vx, self.vy).clamp(sprite.rect))
+                self.vx, self.vy = 0, 0
+                if self.is_dashing:
+                    self.is_dashing = False
+            elif isinstance(sprite, Coin):
+                self.score += 1
+            elif isinstance(sprite, Enemy) or isinstance(sprite, Spike):
+                pg.quit()
+                sys.exit()
 
     def load_images(self):
         self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
@@ -185,6 +181,20 @@ class Wall(pg.sprite.Sprite):
         self.game = game
         self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image.fill(BLUE) 
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+        self.speed = 0
+
+class Perimeter(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.perimeters
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(RED) 
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

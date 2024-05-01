@@ -2,7 +2,7 @@
 
 #new stationary enemy class, damage from enemy interaction, enemy movement
 
-# goal of game to collect all coins before enemy can catch up to you while avoiding stationary dddddddddddddspikes
+# goal of game to collect all coins before enemy can catch up to you while avoiding stationary spikes
 
 
 '''
@@ -56,6 +56,7 @@ class Game: #capitalize classes; easier to identify
         self.coins = pg.sprite.Group()
         self.enemy = pg.sprite.Group()
         self.spike = pg.sprite.Group()
+        self.perimeters = pg.sprite.Group
         for row, tiles in enumerate(self.map_data):
             print(row)
             for col, tile in enumerate(tiles):
@@ -71,6 +72,8 @@ class Game: #capitalize classes; easier to identify
                     Enemy(self, col, row)
                 if tile == 's':
                     Spike(self, col, row)
+                if tile == 'w':
+                    Perimeter(self, col, row)
 
     #run method, responsible for running the game engines
     def run(self):
@@ -117,15 +120,9 @@ class Game: #capitalize classes; easier to identify
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-            elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE:
-                    self.player.start_dash()
+
             # listening for events
-            for event in pg.event.get():
-                # when you hit the red x the window closes the game ends
-                if event.type == pg.QUIT:
-                    self.quit()
-                    print("the game has ended..")
+
                 # keyboard events, arrow keys to move
                 # if event.type == pg.KEYDOWN:
                 #     if event.key == pg.K_LEFT:
