@@ -51,6 +51,7 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
         self.y = y * TILESIZE
+        self.last_dash_time = 0
         self.speed = 300
         self.score = 0
         self.collide_with_walls_flag = True  # Flag for collision behavior
@@ -73,8 +74,11 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vy = self.speed
         if keys[pg.K_SPACE]:
-            if self.dash_cooldown <= 0:
-                self.start_dash() 
+            current_time = pg.time.get_ticks()
+            if current_time - self.last_dash_time >= 3000:
+                print("trying to dash")
+                self.start_dash
+                self.last_dash_time = current_time
 
 #modified by chatgpt
     def start_dash(self):
@@ -82,12 +86,7 @@ class Player(pg.sprite.Sprite):
         self.dash_timer = self.dash_duration
         self.dash_cooldown = 3.0
     def handle_movement(self):
-        if not self.is_dashing:
-            self.rect.x += self.vx * self.game.dt
-            self.collide_with_walls('x')
-            self.rect.y += self.vy * self.game.dt
-            self.collide_with_walls('y')
-        else:
+        if self.is_dashing:
             self.handle_dash()
     def handle_dash(self):
         if self.is_dashing:
@@ -101,16 +100,6 @@ class Player(pg.sprite.Sprite):
             self.rect.y += self.vy * self.game.dt
             self.collide_with_walls('y')
 
-    def check_collisions(self, direction=None):
-        if not self.is_dashing:
-            # Regular collision detection when not dashing
-            hits = pg.sprite.spritecollide(self, self.game.walls, False)
-            if hits and self.collide_with_walls:
-                # Handle collision with walls
-                if direction == 'x':
-                    self.rect.x -= self.vel.x * self.game.dt
-                if direction == 'y':
-                    self.rect.y -= self.vel.y * self.game.dt
 
     def collide_with_walls(self, dir):
         if not self.is_dashing:
@@ -133,7 +122,7 @@ class Player(pg.sprite.Sprite):
                     self.vy = 0   
     
     def collide_with_group(self, group, kill):
-        hits = pg.sprite.spritecollide(self, group, kill)
+        hits = pg.sprite.spritecollide(self, group, True)
         for sprite in hits:
             if isinstance(sprite, Perimeter):
                 screen_rect = pg.Rect(0, 0, WIDTH, HEIGHT)
@@ -190,7 +179,6 @@ class Player(pg.sprite.Sprite):
             #print("I got a coin")
         #self.rect.x = self.x * TILESIZE
         #self.rect.y = self.y * TILESIZE
-        self.check_collisions()
         self.handle_dash()
         self.handle_movement()
         if self.dash_cooldown > 0:
