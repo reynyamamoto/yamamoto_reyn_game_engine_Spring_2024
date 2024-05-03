@@ -157,7 +157,8 @@ class Player(pg.sprite.Sprite):
         hits = pg.sprite.spritecollide(self, group, kill)
         for sprite in hits:
             if isinstance(sprite, Perimeter):
-                self.rect.move_ip(sprite.rect.move(self.vx, self.vy).clamp(sprite.rect))
+                screen_rect = pg.Rect(0, 0, WIDTH, HEIGHT)
+                self.rect.move_ip(sprite.rect.move(self.vx, self.vy).clamp(screen_rect).topleft)#chatgpt assisted
                 self.vx, self.vy = 0, 0
                 if self.is_dashing:
                     self.is_dashing = False
