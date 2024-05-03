@@ -57,6 +57,7 @@ class Player(pg.sprite.Sprite):
         self.is_dashing = False  # Flag for dash state
         self.dash_duration = 0.5  # Dash duration in seconds
         self.dash_timer = 0  # Timer for dash duration
+        self.dash_cooldown = 3.0 #dash cooldown
         game.all_sprites.add(self)
 
 
@@ -71,37 +72,15 @@ class Player(pg.sprite.Sprite):
             self.vy = -self.speed
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vy = self.speed
-        if keys[pg.K_DOWN] or keys[pg.K_SPACE]:
-            self.start_dash()
-    
-    def update(self):
-        # self.rect.x = self.x
-        # self.rect.y = self.y
-        self.animate()
-        self.get_keys()
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        self.rect.x = self.x
-        self.collide_with_walls('x')
-        self.rect.y = self.y
-        self.collide_with_walls('y')
-        self.collide_with_group(self.game.coins, True)
-        self.collide_with_group(self.game.enemy, True)
-        self.collide_with_group(self.game.spike, True)
-        self.collide_with_group(self.game.perimeters, True)
-        #coin_hits = pg.sprite.spritecollide(self.game.coins, True)
-        #if coin_hits:
-            #print("I got a coin")
-        #self.rect.x = self.x * TILESIZE
-        #self.rect.y = self.y * TILESIZE
-        self.check_collisions()
-        self.handle_dash()
-        self.handle_movement()
+        if keys[pg.K_SPACE]:
+            if self.dash_cooldown <= 0:
+                self.start_dash() 
 
-#assisted by chatgpt
+#modified by chatgpt
     def start_dash(self):
         self.is_dashing = True
         self.dash_timer = self.dash_duration
+        self.dash_cooldown = 3.0
     def handle_movement(self):
         if not self.is_dashing:
             self.rect.x += self.vx * self.game.dt
@@ -158,7 +137,7 @@ class Player(pg.sprite.Sprite):
         for sprite in hits:
             if isinstance(sprite, Perimeter):
                 screen_rect = pg.Rect(0, 0, WIDTH, HEIGHT)
-                self.rect.move_ip(sprite.rect.move(self.vx, self.vy).clamp(screen_rect).topleft)#chatgpt assisted
+                self.rect.move_ip(sprite.rect.move(self.vx, self.vy).clamp(screen_rect).topleft)#debugged from chatgpt
                 self.vx, self.vy = 0, 0
                 if self.is_dashing:
                     self.is_dashing = False
@@ -190,6 +169,32 @@ class Player(pg.sprite.Sprite):
                 self.image = self.walking_frames[self.current_frame]
             self.rect = self.image.get_rect()
             self.rect.bottom = bottom
+
+    def update(self):
+        # self.rect.x = self.x
+        # self.rect.y = self.y
+        self.animate()
+        self.get_keys()
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
+        self.collide_with_group(self.game.coins, True)
+        self.collide_with_group(self.game.enemy, True)
+        self.collide_with_group(self.game.spike, True)
+        self.collide_with_group(self.game.perimeters, True)
+        #coin_hits = pg.sprite.spritecollide(self.game.coins, True)
+        #if coin_hits:
+            #print("I got a coin")
+        #self.rect.x = self.x * TILESIZE
+        #self.rect.y = self.y * TILESIZE
+        self.check_collisions()
+        self.handle_dash()
+        self.handle_movement()
+        if self.dash_cooldown > 0:
+            self.dash_cooldown -= self.game.dt
 
     
 
