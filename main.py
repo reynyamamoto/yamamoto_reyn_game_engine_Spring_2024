@@ -7,7 +7,7 @@
 
 '''
 BETA Goal:
-Dashing ability through walls
+Dashing ability through wallsd
 '''
 
 # 
@@ -74,7 +74,6 @@ class Game: #capitalize classes; easier to identify
                     Spike(self, col, row)
                 if tile == 'w':
                     Perimeter(self, col, row)
-
     #run method, responsible for running the game engines
     def run(self):
         self.playing = True

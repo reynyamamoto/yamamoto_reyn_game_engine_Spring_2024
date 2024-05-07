@@ -80,7 +80,7 @@ class Player(pg.sprite.Sprite):
                 self.start_dash
                 self.last_dash_time = current_time
 
-#modified by chatgpt
+#modified by chatgpt then me
     def start_dash(self):
         self.is_dashing = True
         self.dash_timer = self.dash_duration
@@ -122,19 +122,19 @@ class Player(pg.sprite.Sprite):
                     self.vy = 0   
     
     def collide_with_group(self, group, kill):
-        hits = pg.sprite.spritecollide(self, group, True)
+        hits = pg.sprite.spritecollide(self, group, kill)
         for sprite in hits:
-            if isinstance(sprite, Perimeter):
-                screen_rect = pg.Rect(0, 0, WIDTH, HEIGHT)
-                self.rect.move_ip(sprite.rect.move(self.vx, self.vy).clamp(screen_rect).topleft)#debugged from chatgpt
-                self.vx, self.vy = 0, 0
-                if self.is_dashing:
-                    self.is_dashing = False
-            elif isinstance(sprite, Coin):
-                self.score += 1
-            elif isinstance(sprite, Enemy) or isinstance(sprite, Spike):
-                pg.quit()
-                sys.exit()
+                #when player collides with enemy, game exits/player dies
+                if str(hits[0].__class__.__name__) == "Enemy":
+                    pg.quit()
+                    sys.exit()
+                #when player collides with coins, score increments
+                elif str(hits[0].__class__.__name__) == "Coin":
+                    self.score += 1
+                #when player collides with spikes, game exits/player dies
+                elif str(hits[0].__class__.__name__) == "Spike":
+                    pg.quit()
+                    sys.exit()
 
     def load_images(self):
         self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
@@ -173,7 +173,7 @@ class Player(pg.sprite.Sprite):
         self.collide_with_group(self.game.coins, True)
         self.collide_with_group(self.game.enemy, True)
         self.collide_with_group(self.game.spike, True)
-        self.collide_with_group(self.game.perimeters, True)
+        self.collide_with_group(self.game.perimeters, False)
         #coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         #if coin_hits:
             #print("I got a coin")
@@ -199,6 +199,7 @@ class Wall(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
         self.speed = 0
+
 
 class Perimeter(pg.sprite.Sprite):
     def __init__(self, game, x, y):
