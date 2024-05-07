@@ -145,16 +145,17 @@ class Player(pg.sprite.Sprite):
         hits = pg.sprite.spritecollide(self, group, kill)
         for sprite in hits:
                 #when player collides with enemy, game exits/player dies
-                if str(hits[0].__class__.__name__) == "Enemy":
+                if isinstance(sprite, Enemy):
                     pg.quit()
                     sys.exit()
-                #when player collides with coins, score increments
-                elif str(hits[0].__class__.__name__) == "Coin":
+                    # self.show_end_screen()
+                elif isinstance(sprite, Coin):
                     self.score += 1
-                #when player collides with spikes, game exits/player dies
-                elif str(hits[0].__class__.__name__) == "Spike":
+                elif isinstance(sprite, Spike):
                     pg.quit()
                     sys.exit()
+                    # self.show_end_screen()
+                    
 
     def load_images(self):
         self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 

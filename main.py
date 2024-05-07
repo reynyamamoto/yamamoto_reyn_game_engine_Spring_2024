@@ -92,6 +92,7 @@ class Game: #capitalize classes; easier to identify
 
     def update(self):
         self.all_sprites.update()
+        # self.show_end_screen()
 
     
     def draw_grid(self):
@@ -119,22 +120,42 @@ class Game: #capitalize classes; easier to identify
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
+            if event.type == pg.KEYUP:
 
-            # listening for events
+                if event.key == pg.K_f:
+                    g.new()
+                    g.run()
 
-                # keyboard events, arrow keys to move
-                # if event.type == pg.KEYDOWN:
-                #     if event.key == pg.K_LEFT:
-                #         self.player.move(dx=-1)
-                # if event.type == pg.KEYDOWN:
-                #     if event.key == pg.K_RIGHT:
-                #         self.player.move(dx=1)
-                # if event.type == pg.KEYDOWN:
-                #     if event.key == pg.K_UP:
-                #         self.player.move(dy=-1)
-                # if event.type == pg.KEYDOWN:
-                #     if event.key == pg.K_DOWN:
-                #         self.player.move(dy=1)
+
+    # def show_end_screen(self):
+    #     self.screen.fill(BGCOLOR)
+    #     self.draw_text(self.screen, "You have died - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
+    #     pg.display.flip()
+    #     self.wait_for_key()
+
+
+        # while self.running:
+        #     for event in pg.event.get():
+        #         if event.type == pg.QUIT:
+        #             self.running = False
+
+
+    # def wait_for_key(self):
+    #     waiting = True
+    #     while waiting:
+    #         self.clock.tick(FPS)
+    #         for event in pg.event.get():
+    #             if event.type == pg.QUIT:
+    #                 pg.quit()
+    #                 sys.exit()  
+    #             elif event.type == pg.KEYUP:
+    #                 if event.key == pg.K_ESCAPE:
+    #                     pg.quit()
+    #                     sys.exit() 
+    #                 elif event.key == pg.K_f:
+    #                     self.new() # Restart the game
+    #                     waiting = False  # Exit the loop after restarting
+
 
 
     def show_start_screen(self):
@@ -144,7 +165,9 @@ class Game: #capitalize classes; easier to identify
 ####################### Instantiate game... ###################
 
 g = Game()
+g.new()
 # g.show_go_screen()
+
 while True:
     g.new()
     g.run()
