@@ -51,6 +51,7 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
         self.y = y * TILESIZE
+        self.last_freeze_time = 0
         self.last_dash_time = 0
         self.speed = 300
         self.score = 0
@@ -79,7 +80,11 @@ class Player(pg.sprite.Sprite):
                 self.start_dash()
                 self.last_dash_time = current_time
         if keys[pg.K_g]:
-            self.game.toggle_enemy_freeze()
+            current_time = pg.time.get_ticks()
+            if current_time - self.last_freeze_time >= 4000:
+                print("trying to freeze")
+                self.game.toggle_enemy_freeze()
+                self.last_freeze_time = current_time
 
 #modified by chatgpt then me
     def start_dash(self):
