@@ -120,6 +120,26 @@ class Player(pg.sprite.Sprite):
                     elif self.vy < 0:
                         self.rect.top = wall.rect.bottom
                     self.vy = 0   
+
+    def collide_with_perimeters(self, dir):
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.perimeters, False )
+            if hits:
+                if self.vx > 0:
+                    self.x = hits[0].rect.left - self.rect.width
+                if self.vx < 0: 
+                    self.x = hits[0].rect.right
+                self.vx = 0
+                self.rect.x = self.x
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.perimeters, False )
+            if hits:
+                if self.vy > 0:
+                    self.y = hits[0].rect.top - self.rect.height
+                if self.vy < 0:
+                    self.y = hits[0].rect.bottom
+                self.vy = 0
+                self.rect.y = self.y
     
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
@@ -173,7 +193,8 @@ class Player(pg.sprite.Sprite):
         self.collide_with_group(self.game.coins, True)
         self.collide_with_group(self.game.enemy, True)
         self.collide_with_group(self.game.spike, True)
-        self.collide_with_group(self.game.perimeters, False)
+        self.collide_with_perimeters('x')
+        self.collide_with_perimeters('y')
         #coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         #if coin_hits:
             #print("I got a coin")
