@@ -90,6 +90,12 @@ class Game: #capitalize classes; easier to identify
         pg.quit()
         sys.exit()
 
+    def toggle_enemy_freeze(self):
+        for enemy in self.enemy:
+            enemy.freeze()
+
+
+
     def update(self):
         self.all_sprites.update()
         # self.show_end_screen()

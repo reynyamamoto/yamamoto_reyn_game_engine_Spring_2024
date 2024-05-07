@@ -58,7 +58,7 @@ class Player(pg.sprite.Sprite):
         self.is_dashing = False  # Flag for dash state
         self.dash_duration = 0.5  # Dash duration in seconds
         self.dash_timer = 0  # Timer for dash duration
-        self.dash_cooldown = 3.0 #dash cooldown
+        self.dash_cooldown = 3000 #dash cooldown
         game.all_sprites.add(self)
 
 
@@ -76,9 +76,10 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_SPACE]:
             current_time = pg.time.get_ticks()
             if current_time - self.last_dash_time >= 3000:
-                print("trying to dash")
-                self.start_dash
+                self.start_dash()
                 self.last_dash_time = current_time
+        if keys[pg.K_g]:
+            self.game.toggle_enemy_freeze()
 
 #modified by chatgpt then me
     def start_dash(self):
@@ -268,7 +269,10 @@ class Enemy(pg.sprite.Sprite):
         self.rect.center = self.pos
         self.rot = 0
         self.speed = 1300
+        self.freeze_duration = 2
+        self.freeze_timer = 0
         #speed of enemy
+
     def update(self):
         self.rot = (self.game.player.rect.center - self.pos).angle_to(vec(1, 0))
         self.rect.center = self.pos
@@ -277,6 +281,14 @@ class Enemy(pg.sprite.Sprite):
         #enemy acceleration
         self.vel += self.acc * self.game.dt
         self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
+        if self.freeze_timer > 0:
+            self.freeze_timer -= self.game.dt
+            if self.freeze_timer <= 0:
+                self.speed = 1300
+
+    def freeze(self):
+        self.speed = 0
+        self.freeze_timer = self.freeze_duration
 
     def collide_with_enemies(self, dir):
         if dir == 'x':
