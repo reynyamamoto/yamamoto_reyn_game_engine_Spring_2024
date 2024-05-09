@@ -101,9 +101,7 @@ class Player(pg.sprite.Sprite):
             if self.dash_timer <= 0:
                 self.is_dashing = False  # End dash when duration is over
         else:
-            self.rect.x += self.vx * self.game.dt
             self.collide_with_walls('x')
-            self.rect.y += self.vy * self.game.dt
             self.collide_with_walls('y')
 
 

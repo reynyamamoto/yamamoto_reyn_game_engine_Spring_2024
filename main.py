@@ -7,7 +7,7 @@
 
 '''
 BETA Goal:
-Dashing ability through wallsd
+Dashing ability through walls
 '''
 
 # 
@@ -126,11 +126,11 @@ class Game: #capitalize classes; easier to identify
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-            if event.type == pg.KEYUP:
+            # if event.type == pg.KEYUP:
 
-                if event.key == pg.K_f:
-                    g.new()
-                    g.run()
+                # if event.key == pg.K_f:
+                #     g.new()
+                #     g.run()
 
 
     # def show_end_screen(self):
