@@ -121,6 +121,21 @@ class Game: #capitalize classes; easier to identify
             self.all_sprites.draw(self.screen)
             self.draw_text(self.screen, str(self.player.score), 24, WHITE, WIDTH/2 - 32, 1)
             pg.display.flip()
+            if self.player.collide == True:
+                self.screen.fill(BGCOLOR)
+                self.draw_text(self.screen, "You have died - press any key to play", 24, RED, WIDTH/2, HEIGHT/2)
+                pg.display.flip()
+                self.wait_for_key()
+                self.new()
+                self.run()
+            if self.player.collide == True:
+                self.screen.fill(BGCOLOR)
+                self.draw_text(self.screen, "You have died - press any key to play", 24, RED, WIDTH/2, HEIGHT/2)
+                pg.display.flip()
+                self.wait_for_key()
+                self.new()
+                self.run()
+
 
     def events(self):
         for event in pg.event.get():
@@ -133,11 +148,7 @@ class Game: #capitalize classes; easier to identify
                 #     g.run()
 
 
-    # def show_end_screen(self):
-    #     self.screen.fill(BGCOLOR)
-    #     self.draw_text(self.screen, "You have died - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
-    #     pg.display.flip()
-    #     self.wait_for_key()
+
 
 
         # while self.running:
@@ -146,22 +157,17 @@ class Game: #capitalize classes; easier to identify
         #             self.running = False
 
 
-    # def wait_for_key(self):
-    #     waiting = True
-    #     while waiting:
-    #         self.clock.tick(FPS)
-    #         for event in pg.event.get():
-    #             if event.type == pg.QUIT:
-    #                 pg.quit()
-    #                 sys.exit()  
-    #             elif event.type == pg.KEYUP:
-    #                 if event.key == pg.K_ESCAPE:
-    #                     pg.quit()
-    #                     sys.exit() 
-    #                 elif event.key == pg.K_f:
-    #                     self.new() # Restart the game
-    #                     waiting = False  # Exit the loop after restarting
-
+    def wait_for_key(self):
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.quit()
+                if event.type == pg.KEYUP:
+                    waiting = False
+                     
 
 
     def show_start_screen(self):

@@ -55,13 +55,11 @@ class Player(pg.sprite.Sprite):
         self.last_dash_time = 0
         self.speed = 300
         self.score = 0
-        self.collide_with_walls_flag = True  # Flag for collision behavior
         self.is_dashing = False  # Flag for dash state
         self.dash_duration = 0.5  # Dash duration in seconds
-        self.dash_timer = 0  # Timer for dash duration
-        self.dash_cooldown = 3000 #dash cooldown
+        self.dash_timer = 1000  # Timer for dash duration
         game.all_sprites.add(self)
-
+        self.collide = False
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -77,6 +75,7 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_SPACE]:
             current_time = pg.time.get_ticks()
             if current_time - self.last_dash_time >= 3000:
+                print("trying to dash")
                 self.start_dash()
                 self.last_dash_time = current_time
         if keys[pg.K_g]:
@@ -86,11 +85,10 @@ class Player(pg.sprite.Sprite):
                 self.game.toggle_enemy_freeze()
                 self.last_freeze_time = current_time
 
-#modified by chatgpt then me
+#modified from chatgpt
     def start_dash(self):
         self.is_dashing = True
         self.dash_timer = self.dash_duration
-        self.dash_cooldown = 3.0
     def handle_movement(self):
         if self.is_dashing:
             self.handle_dash()
@@ -150,14 +148,14 @@ class Player(pg.sprite.Sprite):
         for sprite in hits:
                 #when player collides with enemy, game exits/player dies
                 if isinstance(sprite, Enemy):
-                    pg.quit()
-                    sys.exit()
+                    self.collide = True
+                    pass
                     # self.show_end_screen()
                 elif isinstance(sprite, Coin):
                     self.score += 1
                 elif isinstance(sprite, Spike):
-                    pg.quit()
-                    sys.exit()
+                    self.collide = True
+                    pass
                     # self.show_end_screen()
                     
 
@@ -207,8 +205,6 @@ class Player(pg.sprite.Sprite):
         #self.rect.y = self.y * TILESIZE
         self.handle_dash()
         self.handle_movement()
-        if self.dash_cooldown > 0:
-            self.dash_cooldown -= self.game.dt
 
     
 
