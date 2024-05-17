@@ -123,14 +123,14 @@ class Game: #capitalize classes; easier to identify
             pg.display.flip()
             if self.player.collide == True:
                 self.screen.fill(BGCOLOR)
-                self.draw_text(self.screen, "You have died - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
+                self.draw_text(self.screen, "You have died try again next time - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
                 pg.display.flip()
                 self.wait_for_key()
                 self.new()
                 self.run()
             if self.player.collide == True:
                 self.screen.fill(BGCOLOR)
-                self.draw_text(self.screen, "You have died - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
+                self.draw_text(self.screen, "You have died try again next time - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
                 pg.display.flip()
                 self.wait_for_key()
                 self.new()
