@@ -123,18 +123,26 @@ class Game: #capitalize classes; easier to identify
             pg.display.flip()
             if self.player.collide == True:
                 self.screen.fill(BGCOLOR)
-                self.draw_text(self.screen, "You have died - press any key to play", 24, RED, WIDTH/2, HEIGHT/2)
+                self.draw_text(self.screen, "You have died - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
                 pg.display.flip()
                 self.wait_for_key()
                 self.new()
                 self.run()
             if self.player.collide == True:
                 self.screen.fill(BGCOLOR)
-                self.draw_text(self.screen, "You have died - press any key to play", 24, RED, WIDTH/2, HEIGHT/2)
+                self.draw_text(self.screen, "You have died - press f to play", 24, RED, WIDTH/2, HEIGHT/2)
                 pg.display.flip()
                 self.wait_for_key()
                 self.new()
                 self.run()
+            if self.player.score == 9:
+                self.screen.fill(BGCOLOR)
+                self.draw_text(self.screen, "You won! - press f to play again", 24, GREEN, WIDTH/2, HEIGHT/2)
+                pg.display.flip()
+                self.wait_for_key()
+                self.new()
+                self.run()
+
 
 
     def events(self):
@@ -165,8 +173,9 @@ class Game: #capitalize classes; easier to identify
                 if event.type == pg.QUIT:
                     waiting = False
                     self.quit()
-                if event.type == pg.KEYUP:
-                    waiting = False
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_f:
+                        waiting = False
                      
 
 
